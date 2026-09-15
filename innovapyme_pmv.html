@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INNOVAPYME | Gestión de Proyectos</title>
+<style>
+:root{--bg:#f4f6f8;--card:#fff;--text:#1f2937;--muted:#6b7280;--line:#e5e7eb;--primary:#2563eb;--primary2:#1d4ed8;--green:#16a34a;--amber:#d97706;--red:#dc2626;--purple:#7c3aed}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text)}
+.app{display:flex;min-height:100vh}.sidebar{width:245px;background:#172033;color:#fff;padding:22px 14px;position:fixed;inset:0 auto 0 0}
+.logo{font-weight:800;font-size:20px;padding:0 12px 22px;border-bottom:1px solid #334155}.logo small{display:block;font-size:11px;color:#aeb8c8;font-weight:500;margin-top:5px}
+.nav{margin-top:18px}.nav button{width:100%;border:0;background:transparent;color:#d7deea;text-align:left;padding:12px;border-radius:8px;margin:2px 0;cursor:pointer;font-size:14px}.nav button:hover,.nav button.active{background:#263653;color:#fff}.nav span{margin-right:9px}
+.main{margin-left:245px;width:calc(100% - 245px);padding:28px 34px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:25px}.top h1{font-size:25px;margin:0}.top p{margin:5px 0 0;color:var(--muted);font-size:13px}.user{background:#fff;border:1px solid var(--line);padding:9px 13px;border-radius:8px;font-size:13px}
+.view{display:none}.view.active{display:block}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}.card{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:18px;box-shadow:0 1px 2px #00000008}.metric{font-size:27px;font-weight:750;margin-top:7px}.label{font-size:12px;color:var(--muted)}.delta{font-size:11px;margin-top:7px;color:var(--green)}
+.section{margin-top:22px}.section-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.section h2{font-size:17px;margin:0}.btn{border:0;background:var(--primary);color:#fff;padding:9px 13px;border-radius:7px;cursor:pointer;font-size:12px}.btn:hover{background:var(--primary2)}.btn.secondary{background:#fff;color:var(--text);border:1px solid var(--line)}
+.projects{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.project{background:#fff;border:1px solid var(--line);border-radius:10px;padding:17px}.project-title{font-weight:700;margin-bottom:7px}.project-meta{font-size:12px;color:var(--muted);display:flex;gap:15px;flex-wrap:wrap}.progress{height:7px;background:#edf0f4;border-radius:9px;overflow:hidden;margin:12px 0 7px}.bar{height:100%;background:var(--primary);border-radius:9px}.status{font-size:11px;padding:4px 8px;border-radius:20px;background:#e8f7ee;color:#17733b}.status.amber{background:#fff4df;color:#9a5b00}.status.gray{background:#eef1f5;color:#596273}.status.red{background:#feeaea;color:#a91f1f}
+table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden;font-size:12px}th,td{padding:12px 13px;border-bottom:1px solid var(--line);text-align:left}th{font-size:11px;color:#64748b;background:#f8fafc}tr:last-child td{border-bottom:0}
+.detail-head{background:#fff;border:1px solid var(--line);border-radius:11px;padding:20px}.detail-grid{display:grid;grid-template-columns:2fr 1fr;gap:15px;margin-top:15px}.info-box{background:#fff;border:1px solid var(--line);border-radius:10px;padding:17px}.info-box h3{font-size:14px;margin:0 0 13px}.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.fact{background:#f8fafc;border-radius:8px;padding:11px}.fact b{display:block;font-size:15px;margin-top:4px}.fact span{font-size:10px;color:var(--muted)}
+.alert{padding:12px;border-radius:8px;font-size:12px;margin:8px 0;background:#fff7e6;border:1px solid #fde3ad}.alert.red{background:#fff0f0;border-color:#fecaca}
+.kanban{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.column{background:#eef1f5;border-radius:9px;padding:10px;min-height:330px}.column h3{font-size:12px;margin:3px 4px 10px}.ticket{background:#fff;border:1px solid var(--line);border-radius:8px;padding:11px;margin:8px 0;font-size:12px;box-shadow:0 1px 2px #00000008}.ticket small{display:block;color:var(--muted);margin-top:7px}
+.user-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.role{background:#fff;border:1px solid var(--line);border-radius:10px;padding:17px}.role h3{margin:0 0 7px;font-size:14px}.role p{margin:4px 0;font-size:12px;color:var(--muted)}
+.notice{font-size:10px;color:#7b8493;margin-top:13px}.empty{padding:30px;text-align:center;color:var(--muted)}
+.search{border:1px solid var(--line);border-radius:7px;padding:9px 11px;width:230px}
+@media(max-width:900px){.sidebar{width:190px}.main{margin-left:190px;width:calc(100% - 190px);padding:20px}.cards,.projects,.detail-grid,.user-grid{grid-template-columns:1fr 1fr}.kanban{grid-template-columns:1fr 1fr}}
+@media(max-width:650px){.sidebar{position:relative;width:100%;height:auto}.app{display:block}.main{margin-left:0;width:100%}.cards,.projects,.detail-grid,.user-grid,.kanban,.facts{grid-template-columns:1fr}.nav{display:flex;flex-wrap:wrap}.nav button{width:auto}.top{align-items:flex-start;gap:10px}.search{width:150px}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+  <div class="logo">INNOVAPYME <small>Gestión digital de proyectos</small></div>
+  <nav class="nav">
+    <button class="active" data-view="inicio"><span>▦</span>Inicio</button>
+    <button data-view="proyectos"><span>▣</span>Mis proyectos</button>
+    <button data-view="detalle"><span>◫</span>Proyecto piloto</button>
+    <button data-view="actividades"><span>✓</span>Actividades</button>
+    <button data-view="seguimiento"><span>◔</span>Seguimiento</button>
+    <button data-view="riesgos"><span>!</span>Riesgos e incidencias</button>
+    <button data-view="kanban"><span>→</span>Flujo de trabajo Kanban</button>
+    <button data-view="usuarios"><span>♙</span>Usuarios</button>
+  </nav>
+</aside>
+
+<main class="main">
+<div class="top"><div><h1 id="title">Inicio</h1><p>Control centralizado de los proyectos internos de INNOVAPYME SAS</p></div><div class="user">Usuario: Responsable de proyectos</div></div>
+
+<section id="inicio" class="view active">
+<div class="cards">
+ <div class="card"><div class="label">Proyectos activos</div><div class="metric">4</div><div class="delta">Todos con seguimiento</div></div>
+ <div class="card"><div class="label">Avance general</div><div class="metric">68%</div><div class="delta">Actualizado recientemente</div></div>
+ <div class="card"><div class="label">Actividades pendientes</div><div class="metric">12</div><div class="delta">Requieren seguimiento</div></div>
+ <div class="card"><div class="label">Actividades vencidas</div><div class="metric">2</div><div class="delta" style="color:var(--red)">Revisar fechas</div></div>
+</div>
+<div class="section"><div class="section-head"><h2>Proyectos internos</h2><button class="btn" onclick="show('proyectos')">Ver proyectos</button></div>
+<div class="projects" id="projectCards"></div></div>
+<div class="section"><div class="section-head"><h2>Alertas y próximos vencimientos</h2></div>
+<div class="alert red"><b>2 actividades vencidas:</b> revisar fechas y responsables.</div>
+<div class="alert"><b>Próximo vencimiento:</b> Validar funcionamiento — Proyecto piloto.</div>
+</div>
+</section>
+
+<section id="proyectos" class="view">
+<div class="section-head"><h2>Mis proyectos</h2><input class="search" id="projectSearch" placeholder="Buscar proyecto..."></div>
+<table><thead><tr><th>Proyecto</th><th>Responsable</th><th>Estado</th><th>Inicio</th><th>Cierre</th><th>Avance</th><th>Actividades</th><th>Entregables</th><th>Riesgos</th><th></th></tr></thead>
+<tbody id="projectsTable"></tbody></table>
+</section>
+
+<section id="detalle" class="view">
+<div class="detail-head"><div class="label">Proyecto interno</div><h2 style="margin:5px 0 8px">Proyecto piloto</h2><p style="font-size:12px;color:var(--muted)">Primera implementación de la herramienta digital para centralizar la gestión del proyecto.</p>
+<div class="facts"><div class="fact"><span>Responsable</span><b>Responsable de proyectos</b></div><div class="fact"><span>Estado</span><b>En proceso</b></div><div class="fact"><span>Avance</span><b>70%</b></div><div class="fact"><span>Fecha de inicio</span><b>03/09/2026</b></div><div class="fact"><span>Fecha de cierre</span><b>30/09/2026</b></div><div class="fact"><span>Entregables</span><b>4</b></div></div></div>
+<div class="detail-grid"><div class="info-box"><h3>Objetivo</h3><p style="font-size:12px;color:var(--muted);line-height:1.6">Probar una primera versión de la solución digital para organizar actividades, responsables, fechas, entregables, avances y riesgos en un único espacio.</p><h3 style="margin-top:20px">Avance del proyecto</h3><div class="progress"><div class="bar" style="width:70%"></div></div><div style="font-size:11px;color:var(--muted)">70% completado</div></div>
+<div class="info-box"><h3>Próximos hitos</h3><div class="alert">Validar funcionamiento</div><div class="alert">Recoger retroalimentación</div><div class="alert">Aplicar ajustes</div></div></div>
+<div class="section"><div class="section-head"><h2>Resumen de actividades</h2><button class="btn secondary" onclick="show('actividades')">Ver todas</button></div><div id="detailActivity"></div></div>
+<p class="notice">Datos simulados para demostración del PMV.</p>
+</section>
+
+<section id="actividades" class="view">
+<div class="section-head"><h2>Actividades — Proyecto piloto</h2><button class="btn" onclick="addActivity()">+ Registrar actividad</button></div>
+<table><thead><tr><th>Actividad</th><th>Responsable</th><th>Fecha</th><th>Estado</th><th>Avance</th></tr></thead><tbody id="activityTable"></tbody></table>
+<p class="notice">Datos simulados para demostración del PMV.</p>
+</section>
+
+<section id="seguimiento" class="view">
+<div class="cards"><div class="card"><div class="label">Avance del proyecto</div><div class="metric">70%</div></div><div class="card"><div class="label">Actividades completadas</div><div class="metric">6/10</div></div><div class="card"><div class="label">Pendientes</div><div class="metric">3</div></div><div class="card"><div class="label">Vencidas</div><div class="metric">1</div></div></div>
+<div class="section"><div class="section-head"><h2>Avance de actividades</h2></div><div class="info-box"><p style="font-size:12px">El seguimiento permite identificar el estado de las actividades y concentrar la información necesaria para tomar acciones sobre fechas, entregables y pendientes.</p><div class="progress"><div class="bar" style="width:70%"></div></div></div></div>
+<div class="section"><div class="section-head"><h2>Entregables</h2></div><table><tr><th>Entregable</th><th>Estado</th><th>Fecha</th></tr><tr><td>Estructura inicial</td><td><span class="status">Completado</span></td><td>10/09/2026</td></tr><tr><td>Registro de actividades</td><td><span class="status">Completado</span></td><td>15/09/2026</td></tr><tr><td>Seguimiento configurado</td><td><span class="status amber">En proceso</span></td><td>22/09/2026</td></tr><tr><td>Retroalimentación y ajustes</td><td><span class="status gray">Pendiente</span></td><td>30/09/2026</td></tr></table></div>
+</section>
+
+<section id="riesgos" class="view">
+<div class="section-head"><h2>Riesgos e incidencias</h2><button class="btn" onclick="addRisk()">+ Registrar</button></div>
+<table><thead><tr><th>Riesgo / incidencia</th><th>Descripción</th><th>Impacto</th><th>Estado</th><th>Respuesta</th></tr></thead><tbody id="riskTable"></tbody></table>
+<p class="notice">Datos simulados para demostración del PMV.</p>
+</section>
+
+<section id="kanban" class="view">
+<div class="section-head"><h2>Flujo de trabajo Kanban</h2><span style="font-size:11px;color:var(--muted)">Las tarjetas representan actividades del proyecto piloto.</span></div>
+<div class="kanban" id="kanbanBoard"></div>
+<p class="notice">El flujo Kanban representa la forma de gestionar el trabajo dentro de la herramienta. No sustituye el resto de funcionalidades del PMV.</p>
+</section>
+
+<section id="usuarios" class="view">
+<div class="section-head"><h2>Usuarios y participación</h2></div><div class="user-grid">
+<div class="role"><h3>Gerencia General</h3><p>• Consulta avance</p><p>• Consulta alertas</p><p>• Revisa resultados</p></div>
+<div class="role"><h3>Área administrativa</h3><p>• Apoya la organización y estandarización</p><p>• Consulta y actualiza información</p></div>
+<div class="role"><h3>Área de tecnología</h3><p>• Configura la herramienta</p><p>• Da soporte a la herramienta</p></div>
+<div class="role"><h3>Responsables de proyectos</h3><p>• Planean actividades</p><p>• Asignan responsables</p><p>• Registran avances</p><p>• Controlan entregables</p></div>
+<div class="role"><h3>Equipo del proyecto</h3><p>• Consulta tareas</p><p>• Actualiza actividades</p><p>• Registra avances</p></div>
+</div></section>
+</main></div>
+
+<script>
+const projects=[
+{name:"Capacitaciones",resp:"Área administrativa",status:"En proceso",date:"01/09/2026",end:"25/09/2026",progress:65,acts:8,del:3,risk:1,next:"Definir responsables"},
+{name:"Compras",resp:"Área administrativa",status:"En proceso",date:"05/09/2026",end:"20/09/2026",progress:72,acts:6,del:2,risk:0,next:"Registrar entregables"},
+{name:"Campañas",resp:"Responsable de proyectos",status:"Pendiente",date:"10/09/2026",end:"05/10/2026",progress:35,acts:7,del:2,risk:1,next:"Configurar seguimiento"},
+{name:"Desarrollo de software",resp:"Área de tecnología",status:"En proceso",date:"28/08/2026",end:"30/09/2026",progress:80,acts:12,del:4,risk:2,next:"Validar funcionamiento"}
+];
+let activities=[
+["Definir alcance del piloto","Responsable de proyectos","04/09/2026","Completado",100],
+["Configurar estructura de la herramienta","Área de tecnología","08/09/2026","Completado",100],
+["Registrar actividades","Responsable de proyectos","12/09/2026","Completado",100],
+["Definir responsables","Responsable de proyectos","15/09/2026","Completado",100],
+["Registrar entregables","Área administrativa","17/09/2026","En proceso",70],
+["Configurar seguimiento","Área de tecnología","22/09/2026","En proceso",55],
+["Registrar riesgos","Responsable de proyectos","23/09/2026","Pendiente",0],
+["Validar funcionamiento","Equipo del proyecto","26/09/2026","Pendiente",0],
+["Recoger retroalimentación","Equipo del proyecto","28/09/2026","Pendiente",0],
+["Aplicar ajustes","Área de tecnología","30/09/2026","Pendiente",0]
+];
+const risks=[["Resistencia al cambio / baja adopción de la herramienta","Uso habitual de documentos físicos y Excel.","Alto","Abierto","Capacitación, acompañamiento, proyecto piloto y recopilación de retroalimentación"]];
+const kanban={
+"Por hacer":["Registrar riesgos","Recoger retroalimentación","Aplicar ajustes"],
+"En proceso":["Configurar herramienta","Crear registro de actividades","Configurar seguimiento"],
+"En revisión":["Validar funcionamiento","Revisar estructura del proyecto"],
+"Completado":["Definir alcance","Identificar necesidades","Diseñar estructura inicial"]
+};
+function statusClass(s){return s==="En proceso"?"status amber":s==="Pendiente"?"status gray":"status"}
+function show(id){
+document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
+document.getElementById(id).classList.add("active");
+document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===id));
+const names={inicio:"Inicio",proyectos:"Mis proyectos",detalle:"Proyecto piloto",actividades:"Actividades",seguimiento:"Seguimiento",riesgos:"Riesgos e incidencias",kanban:"Flujo de trabajo Kanban",usuarios:"Usuarios"};
+document.getElementById("title").textContent=names[id];
+window.scrollTo(0,0);
+}
+document.querySelectorAll(".nav button").forEach(b=>b.onclick=()=>show(b.dataset.view));
+function renderProjects(){
+document.getElementById("projectCards").innerHTML=projects.map(p=>`<div class="project"><div class="project-title">${p.name} <span class="${statusClass(p.status)}" style="float:right">${p.status}</span></div><div class="project-meta"><span>Responsable: ${p.resp}</span><span>Próxima: ${p.next}</span></div><div class="progress"><div class="bar" style="width:${p.progress}%"></div></div><div class="project-meta"><b>${p.progress}% de avance</b><button class="btn secondary" onclick="show('detalle')" style="margin-left:auto;padding:5px 9px">Ver proyecto</button></div></div>`).join("");
+renderTable();
+}
+function renderTable(filter=""){
+document.getElementById("projectsTable").innerHTML=projects.filter(p=>p.name.toLowerCase().includes(filter.toLowerCase())).map(p=>`<tr><td><b>${p.name}</b></td><td>${p.resp}</td><td><span class="${statusClass(p.status)}">${p.status}</span></td><td>${p.date}</td><td>${p.end}</td><td>${p.progress}%</td><td>${p.acts}</td><td>${p.del}</td><td>${p.risk}</td><td><button class="btn secondary" onclick="show('detalle')">Ver proyecto</button></td></tr>`).join("");
+}
+function renderActivities(){
+document.getElementById("activityTable").innerHTML=activities.map(a=>`<tr><td><b>${a[0]}</b></td><td>${a[1]}</td><td>${a[2]}</td><td><span class="${statusClass(a[3])}">${a[3]}</span></td><td><div style="min-width:100px"><div class="progress"><div class="bar" style="width:${a[4]}%"></div></div>${a[4]}%</div></td></tr>`).join("");
+document.getElementById("detailActivity").innerHTML="<table><thead><tr><th>Actividad</th><th>Responsable</th><th>Estado</th><th>Avance</th></tr></thead><tbody>"+activities.slice(0,5).map(a=>`<tr><td>${a[0]}</td><td>${a[1]}</td><td><span class="${statusClass(a[3])}">${a[3]}</span></td><td>${a[4]}%</td></tr>`).join("")+"</tbody></table>";
+}
+function renderRisks(){
+document.getElementById("riskTable").innerHTML=risks.map(r=>`<tr><td><b>${r[0]}</b></td><td>${r[1]}</td><td>${r[2]}</td><td><span class="status amber">${r[3]}</span></td><td>${r[4]}</td></tr>`).join("");
+}
+function renderKanban(){
+document.getElementById("kanbanBoard").innerHTML=Object.entries(kanban).map(([col,tickets])=>`<div class="column"><h3>${col} <span style="float:right;color:#8791a0">${tickets.length}</span></h3>${tickets.map(t=>`<div class="ticket"><b>${t}</b><small>Proyecto piloto</small></div>`).join("")}</div>`).join("");
+}
+function addActivity(){
+const name=prompt("Nombre de la nueva actividad:");
+if(name){activities.push([name,"Responsable de proyectos","30/09/2026","Pendiente",0]);renderActivities();alert("Actividad registrada en el PMV.");}
+}
+function addRisk(){
+const name=prompt("Riesgo o incidencia:");
+if(name){risks.push([name,"Registro agregado para demostración.","Medio","Abierto","Definir respuesta y hacer seguimiento."]);renderRisks();alert("Riesgo registrado en el PMV.");}
+}
+document.getElementById("projectSearch").addEventListener("input",e=>renderTable(e.target.value));
+renderProjects();renderActivities();renderRisks();renderKanban();
+</script>
+</body>
+</html>
